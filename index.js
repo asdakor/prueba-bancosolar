@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import express from 'express';
 import path from 'path';
-
+import webRoutes from './routes/web.route.js'
 
 const __dirname = import.meta.dirname;
 
@@ -12,10 +12,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
-app.get('/', (req, res) => {
-    res.send('estas en el index');
-});
-
+app.use('/', webRoutes)
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log(`El servidor se inicio en http://localhost:${PORT}`)

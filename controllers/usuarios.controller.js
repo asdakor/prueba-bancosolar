@@ -20,7 +20,21 @@ const usuarioAgregar = async (req, res) => {
         return res.status(500).json({ ok: false })
     }
 }
+const usuarioEditar = async (req, res) => {
+    try {
+        const { id } = req.params
+        const usuario = await usuariosModel.buscarID(id)
+        if (!usuario) return res.status(404).json({ ok: false, msg: "no se encontró el estudiante" })
+        const { nombre, balance } = req.body
+        const datos = { id, nombre, balance }
+        const usuariosEdit = await usuariosModel.edit(datos)
+        return res.status(201).json(usuariosEdit)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ ok: false })
+    }
+}
 
 export const usuariosController = {
-    getAll, usuarioAgregar
+    getAll, usuarioAgregar, usuarioEditar
 }

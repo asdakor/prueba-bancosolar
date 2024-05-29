@@ -5,13 +5,13 @@ const setInfoModal = (nombre, balance, id) => {
 };
 
 const editUsuario = async (id) => {
-    const name = $("#nombreEdit").val();
+    const nombre = $("#nombreEdit").val();
     const balance = $("#balanceEdit").val();
     try {
         const { data } = await axios.put(
-            `http://localhost:3000/usuario?id=${id}`,
+            `http://localhost:3000/usuario/${id}`,
             {
-                name,
+                nombre,
                 balance,
             }
         );

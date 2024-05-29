@@ -146,16 +146,20 @@ const eliminarUsuario = async (id) => {
 
 const getTransferencias = async () => {
     try {
+        const response2 = await axios.get("http://localhost:3000/usuarios");
+        const usuarios = response2.data;
         const response = await axios.get("http://localhost:3000/transferencias");
-        const data = response.data;
+        const transferencias = response.data;
         $(".transferencias").html("");
 
-        data.forEach((t) => {
+        transferencias.forEach((t) => {
+            const emisor = usuarios.find((usuario) => usuario.id === t.emisor);
+            const receptor = usuarios.find((usuario) => usuario.id === t.receptor);
             $(".transferencias").append(`
                 <tr>
-                    <td>${formatDate(t[4])}</td>
-                    <td>${t.emisor}</td>
-                    <td>${t.receptor}</td>
+                    <td>${formatDate(t.fecha)}</td>
+                    <td>${emisor ? emisor.nombre : 'Desconocido'}</td>
+                    <td>${receptor ? receptor.nombre : 'Desconocido'}</td>
                     <td>${t.monto}</td>
                 </tr>
             `);

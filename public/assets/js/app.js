@@ -60,27 +60,38 @@ $("form:last").submit(async (e) => {
     e.preventDefault();
     let emisor = $("form:last select:first").val();
     let receptor = $("form:last select:last").val();
-    let monto = $("#monto").val();
-    if (!monto || !emisor || !receptor) {
-        alert("Debe seleccionar un emisor, receptor y monto a transferir");
+    let monto = parseFloat($("#monto").val());
+
+    if (!emisor || !receptor || isNaN(monto) || monto <= 0) {
+        alert("Debe seleccionar un emisor, receptor y un monto válido a transferir");
         return false;
     }
+
     try {
         const response = await fetch("http://localhost:3000/transferencia", {
-            method: "post",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
                 emisor,
                 receptor,
-                monto,
-            }),
+                monto
+            })
         });
+
+        if (!response.ok) {
+            throw new Error("Error en la solicitud");
+        }
+
         const data = await response.json();
         location.reload();
     } catch (e) {
         console.log(e);
-        alert("Algo salió mal..." + e);
+        alert("Algo salió mal: " + e.message);
     }
 });
+
 
 const getUsuarios = async () => {
     try {
@@ -113,7 +124,7 @@ const getUsuarios = async () => {
                 </tr>
             `;
 
-            opcionesHtml += `<option value="${c.nombre}">${c.nombre}</option>`;
+            opcionesHtml += `<option value="${c.id}">${c.nombre}</option>`;
         });
 
         $(".usuarios").html(usuariosHtml);
@@ -134,20 +145,26 @@ const eliminarUsuario = async (id) => {
 };
 
 const getTransferencias = async () => {
-    const { data } = await axios.get("http://localhost:3000/transferencias");
-    $(".transferencias").html("");
+    try {
+        const response = await axios.get("http://localhost:3000/transferencias");
+        const data = response.data;
+        $(".transferencias").html("");
 
-    data.forEach((t) => {
-        $(".transferencias").append(`
-       <tr>
-         <td> ${formatDate(t[4])} </td>
-         <td> ${t[1]} </td>
-         <td> ${t[2]} </td>
-         <td> ${t[3]} </td>
-       </tr>
-     `);
-    });
+        data.forEach((t) => {
+            $(".transferencias").append(`
+                <tr>
+                    <td>${formatDate(t[4])}</td>
+                    <td>${t.emisor}</td>
+                    <td>${t.receptor}</td>
+                    <td>${t.monto}</td>
+                </tr>
+            `);
+        });
+    } catch (error) {
+        console.error("Error fetching transferencias:", error);
+    }
 };
+
 
 getUsuarios();
 getTransferencias();

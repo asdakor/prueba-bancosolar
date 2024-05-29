@@ -33,6 +33,16 @@ const edit = async ({ id, nombre, balance }) => {
     const { rows } = await pool.query(query)
     return rows[0]
 }
+
+const eliminar = async ( id ) => {
+    const query = {
+        text: "DELETE FROM usuarios WHERE id = $1 RETURNING *",
+        values: [id]
+    };
+    const { rows } = await pool.query(query);
+    return;
+}
+
 export const usuariosModel = {
-    getAll, agregar, edit, buscarID
+    getAll, agregar, edit, buscarID, eliminar
 }

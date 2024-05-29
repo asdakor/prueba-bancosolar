@@ -8,5 +8,6 @@ router.get('/', webController.inicio)
 router.get('/usuarios', usuariosController.getAll)
 router.post('/usuario', usuariosController.usuarioAgregar)
 router.put('/usuario/:id', usuariosController.usuarioEditar)
+router.delete('/usuario/:id', usuariosController.usuarioEliminar)
 
 export default router;

@@ -127,7 +127,7 @@ const getUsuarios = async () => {
 
 
 const eliminarUsuario = async (id) => {
-    const response = await fetch(`http://localhost:3000/usuario?id=${id}`, {
+    const response = await fetch(`http://localhost:3000/usuario/${id}`, {
         method: "DELETE",
     });
     getUsuarios();
